@@ -51,7 +51,7 @@ int _is_empty(char *str);
 void free_stack(stack_t **stack);
 void handle_monty_file_stream(FILE **stream, char *file_name);
 void push(stack_t **stack, unsigned int line_number);
-void (*get_op_func(char *opcode, size_t line_no))(stack_t **, unsigned int);
+void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, unsigned int);
 stack_t *malloc_stack(void);
 void pall(stack_t **stack, unsigned int line_number);
 

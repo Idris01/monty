@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	stack_t *stack = NULL;
 	void (*f)(stack_t **stack, unsigned int line_no);
 	ssize_t char_read;
-	size_t char_len = 0, line_no = 0, token_cnt, done;
+	size_t char_len = 0, line_no = 0, t_cnt, done;
 	char *opcode = NULL, *line_read = NULL, *temp = NULL;
 
 	handle_monty_argc(argc);	/* exit with error if argc is not 2 */
@@ -25,13 +25,13 @@ int main(int argc, char **argv)
 	{
 		line_no++;
 		temp = strtok(line_read, " \n");
-		for (token_cnt = 0, done = 0;; temp = strtok(NULL, " \n"))
+		for (t_cnt = 0, done = 0;; temp = strtok(NULL, " \n"))
 		{
-			if (temp == NULL || done || token_cnt > 1)
+			if (temp == NULL || done || t_cnt > 1)
 			{
-				if (token_cnt == 0)
+				if (t_cnt == 0)
 					break;
-				f = get_op_func(opcode, line_no);
+				f = get_op_func(&stack, opcode, line_no);
 				f(&stack, line_no);
 				opcode = NULL;
 				node_value = NULL;
@@ -39,16 +39,17 @@ int main(int argc, char **argv)
 			}
 			else if (!_is_empty(temp))
 			{
-				token_cnt++;
-				if (token_cnt == 1)
+				t_cnt++;
+				if (t_cnt == 1)
 					opcode = temp;
-				else if (token_cnt == 2)
+				else if (t_cnt == 2)
 					node_value = temp;
 				else
 					done = 1;
 			}
 		}
 	}
+	free(line_read);
 	fclose(stream);
 	free_stack(&stack);
 	return (0);
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
  *
  * Return: pointer to function corresponding to opcode or NULL if error
  */
-void (*get_op_func(char *opcode, size_t line_no))(stack_t **, unsigned int)
+void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, unsigned int)
 {
 	instruction_t instr[] = {
 		{"push", push},
@@ -81,7 +82,8 @@ void (*get_op_func(char *opcode, size_t line_no))(stack_t **, unsigned int)
 	}
 	/* check if null */
 	if (instr[itr].opcode == NULL)
-	{
+	{	
+		free_stack(stack);
 		fprintf(stderr, "L%lu: unknown instruction %s\n", line_no, opcode);
 		exit(EXIT_FAILURE);
 	}
@@ -141,4 +143,5 @@ void free_stack(stack_t **stack)
 			free(temp);
 		}
 	}
+	
 }
