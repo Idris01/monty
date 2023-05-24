@@ -66,6 +66,7 @@ void (*get_op_func(char *opcode, size_t line_no))(stack_t **, unsigned int)
 	instruction_t instr[] = {
 		{"push", push},
 		{"pall", pall},
+		{"pint", pint},
 		{NULL, NULL}
 	};
 	int itr = 0;

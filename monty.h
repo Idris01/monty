@@ -46,6 +46,7 @@ extern char *node_value;
 void handle_process(size_t line_no);
 void handle_monty_argc(int argc);
 int is_num(char *value);
+void pint(stack_t **stack, unsigned int line_no);
 int _is_empty(char *str);
 void free_stack(stack_t **stack);
 void handle_monty_file_stream(FILE **stream, char *file_name);
