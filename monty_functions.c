@@ -79,6 +79,9 @@ int is_num(char *value)
 
 	if (value == NULL)
 		return (0);
+	if (*value == '-' || *value == '+')
+		itr++;
+
 	for (c = value[itr]; c != '\0'; itr++, c = value[itr])
 	{
 		if (!isdigit(c))
