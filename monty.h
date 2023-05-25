@@ -68,5 +68,6 @@ void (*op_func(stack_t **stk, char *cd, size_t ln))(stack_t **, unsigned int);
 stack_t *malloc_stack(void);
 void pall(stack_t **stack, unsigned int line_number);
 void pop(stack_t **stack, unsigned int line_no);
+void swap(stack_t **stack, unsigned int line_no);
 
 #endif
