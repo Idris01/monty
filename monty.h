@@ -41,7 +41,20 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern char *node_value;
+/**
+ * struct info_s - information about monty
+ * @value: pointer to string value of node
+ * @line: pointer to string representing line being processed
+ * @stream: pointer to FILE stream
+ */
+typedef struct info_s
+{
+	char *value;
+	char *line;
+	FILE *stream;
+} info_t;
+
+extern info_t info;
 
 void handle_process(size_t line_no);
 void handle_monty_argc(int argc);
@@ -51,7 +64,7 @@ int _is_empty(char *str);
 void free_stack(stack_t **stack);
 void handle_monty_file_stream(FILE **stream, char *file_name);
 void push(stack_t **stack, unsigned int line_number);
-void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, unsigned int);
+void (*op_func(stack_t **stk, char *cd, size_t ln))(stack_t **, unsigned int);
 stack_t *malloc_stack(void);
 void pall(stack_t **stack, unsigned int line_number);
 

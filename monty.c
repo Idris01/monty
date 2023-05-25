@@ -1,6 +1,6 @@
 #include "monty.h"
 
-char *node_value = NULL;
+info_t info = {NULL, NULL, NULL};
 
 /**
  * main - Entry point to monty program
@@ -12,57 +12,54 @@ char *node_value = NULL;
 
 int main(int argc, char **argv)
 {
-	FILE *stream = NULL;
 	stack_t *stack = NULL;
-	void (*f)(stack_t **stack, unsigned int line_no);
 	ssize_t char_read;
 	size_t char_len = 0, line_no = 0, t_cnt, done;
-	char *opcode = NULL, *line_read = NULL, *temp = NULL;
+	char *opcode = NULL, *temp = NULL;
 
 	handle_monty_argc(argc);	/* exit with error if argc is not 2 */
-	handle_monty_file_stream(&stream, argv[1]); /* exit if error */
-	while ((char_read = getline(&line_read, &char_len, stream)) != -1)
+	handle_monty_file_stream(&(info.stream), argv[1]); /* exit if error */
+	while ((char_read = getline(&(info.line), &char_len, info.stream)) != -1)
 	{
 		line_no++;
-		temp = strtok(line_read, " \n");
+		temp = strtok(info.line, " \n");
 		for (t_cnt = 0, done = 0;; temp = strtok(NULL, " \n"))
 		{
 			if (temp == NULL || done || t_cnt > 1)
 			{
 				if (t_cnt == 0)
 					break;
-				f = get_op_func(&stack, opcode, line_no);
-				f(&stack, line_no);
+				op_func(&stack, opcode, line_no)(&stack, line_no);
 				opcode = NULL;
-				node_value = NULL;
+				info.value = NULL;
 				break;
 			}
 			else if (!_is_empty(temp))
 			{
-				t_cnt++;
-				if (t_cnt == 1)
+				if (++t_cnt == 1)
 					opcode = temp;
 				else if (t_cnt == 2)
-					node_value = temp;
+					info.value = temp;
 				else
 					done = 1;
 			}
 		}
 	}
-	free(line_read);
-	fclose(stream);
+	fclose(info.stream);
+	free(info.line);
 	free_stack(&stack);
 	return (0);
 }
 
 /**
- * get_op_func - Get the function corresponding to given opcode
- * @opcode: pointer to string
- * @line_no: unsigned integer line number that is being processed
+ * op_func - Get the function corresponding to given opcode
+ * @code: pointer to string
+ * @ln: unsigned integer line number that is being processed
+ * @stk: pointer to address of stack head
  *
  * Return: pointer to function corresponding to opcode or NULL if error
  */
-void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, unsigned int)
+void (*op_func(stack_t **stk, char *code, size_t ln))(stack_t **, unsigned int)
 {
 	instruction_t instr[] = {
 		{"push", push},
@@ -74,7 +71,7 @@ void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, u
 
 	while (instr[itr].opcode != NULL)
 	{
-		if ((strcmp(opcode, instr[itr].opcode) == 0))
+		if ((strcmp(code, instr[itr].opcode) == 0))
 		{
 			return (instr[itr].f);
 		}
@@ -82,9 +79,9 @@ void (*get_op_func(stack_t **stack, char *opcode, size_t line_no))(stack_t **, u
 	}
 	/* check if null */
 	if (instr[itr].opcode == NULL)
-	{	
-		free_stack(stack);
-		fprintf(stderr, "L%lu: unknown instruction %s\n", line_no, opcode);
+	{
+		free_stack(stk);
+		fprintf(stderr, "L%lu: unknown instruction %s\n", ln, code);
 		exit(EXIT_FAILURE);
 	}
 	return (NULL);
@@ -143,5 +140,4 @@ void free_stack(stack_t **stack)
 			free(temp);
 		}
 	}
-	
 }
