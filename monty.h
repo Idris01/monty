@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -72,5 +72,6 @@ void swap(stack_t **stack, unsigned int line_no);
 void add(stack_t **stack, unsigned int line_no);
 void nop(stack_t **stack, unsigned int line_no);
 void sub(stack_t **stack, unsigned int line_no);
+void divide(stack_t **stack, unsigned int line_no);
 
 #endif

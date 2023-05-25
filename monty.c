@@ -62,15 +62,11 @@ int main(int argc, char **argv)
 void (*op_func(stack_t **stk, char *code, size_t ln))(stack_t **, unsigned int)
 {
 	instruction_t instr[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pint", pint},
-		{"pop", pop},
-		{"swap", swap},
-		{"add", add},
-		{"nop", nop},
-		{"sub", sub},
-		{NULL, NULL}
+		{"push", push}, {"pall", pall},
+		{"pint", pint}, {"pop", pop},
+		{"swap", swap}, {"add", add},
+		{"nop", nop}, {"sub", sub},
+		{"div", divide}, {NULL, NULL}
 	};
 	int itr = 0;
 
