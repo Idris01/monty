@@ -67,6 +67,7 @@ void (*op_func(stack_t **stk, char *code, size_t ln))(stack_t **, unsigned int)
 		{"pint", pint},
 		{"pop", pop},
 		{"swap", swap},
+		{"add", add},
 		{NULL, NULL}
 	};
 	int itr = 0;
